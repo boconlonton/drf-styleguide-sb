@@ -49,10 +49,13 @@ class UserListApi(ApiErrorsMixin, APIView):
             )
 
     @swagger_auto_schema(
+        operation_id='List users API (with pagination)',
         responses={
             status.HTTP_200_OK: openapi.Response('User List',
                                                  OutputSerializer(many=True))
-        })
+        },
+        paginator_class=DefaultLimitOffsetPagination
+    )
     def get(self, request):
         # Make sure the filters are valid, if passed
         filters_serializer = self.FilterSerializer(data=request.query_params)
@@ -91,7 +94,7 @@ class UserCreateApi(ApiErrorsMixin, APIView):
             ref_name = 'UserCreateOutput'
 
     @swagger_auto_schema(
-        operation_id='Create User API',
+        operation_id='Create user API',
         request_body=InputSerializer,
         responses={
             status.HTTP_201_CREATED: openapi.Response(

@@ -56,6 +56,7 @@ class CustomTokenRefreshView(TokenRefreshView):
             raise NotImplementedError()
 
     @swagger_auto_schema(
+        operation_id='Refresh token API',
         responses={
             HTTP_200_OK: openapi.Response('Refresh Token', OutputRefreshToken)
         })
