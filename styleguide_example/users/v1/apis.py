@@ -1,6 +1,9 @@
-from rest_framework.views import APIView
 from rest_framework import serializers
 from rest_framework import status
+
+from rest_framework.views import APIView
+
+from rest_framework.response import Response
 
 from drf_yasg.utils import swagger_auto_schema
 
@@ -11,6 +14,9 @@ from styleguide_example.api.pagination import get_paginated_response
 from styleguide_example.api.pagination import DefaultLimitOffsetPagination
 
 from styleguide_example.users.v1.selectors import user_list
+
+from styleguide_example.users.v1.services import user_create
+
 from styleguide_example.users.models import BaseUser
 
 
@@ -23,6 +29,7 @@ class UserListApi(ApiErrorsMixin, APIView):
         - is_admin (bool) specify the admin flag to be filtered
 
     """
+
     class Pagination(DefaultLimitOffsetPagination):
         default_limit = 1
 
@@ -65,11 +72,14 @@ class UserListApi(ApiErrorsMixin, APIView):
 class UserCreateApi(ApiErrorsMixin, APIView):
     """Create user API"""
 
-    class InputUserSerializer(serializers.Serializer):
-        id = serializers.IntegerField(required=False)
+    class InputSerializer(serializers.Serializer):
         # Important: If we use BooleanField, it will default to False
         is_admin = serializers.NullBooleanField(required=False)
-        email = serializers.EmailField(required=False)
+        email = serializers.EmailField()
+        password = serializers.CharField()
+
+        class Meta:
+            ref_name = 'UserCreateInput'
 
     class OutputSerializer(serializers.ModelSerializer):
         class Meta:
@@ -77,21 +87,24 @@ class UserCreateApi(ApiErrorsMixin, APIView):
             fields = (
                 'id',
                 'email',
-                'is_admin'
             )
+            ref_name = 'UserCreateOutput'
 
-    @swagger_auto_schema(responses={200: OutputSerializer(many=True)})
-    def get(self, request):
+    @swagger_auto_schema(
+        operation_id='Create User API',
+        request_body=InputSerializer,
+        responses={
+            status.HTTP_201_CREATED: openapi.Response(
+                'Create user successfully',
+                OutputSerializer)
+        })
+    def post(self, request):
         # Make sure the filters are valid, if passed
-        filters_serializer = self.FilterSerializer(data=request.query_params)
-        filters_serializer.is_valid(raise_exception=True)
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-        users = user_list(filters=filters_serializer.validated_data)
+        users = user_create(**serializer.validated_data)
 
-        return get_paginated_response(
-            pagination_class=self.Pagination,
-            serializer_class=self.OutputSerializer,
-            queryset=users,
-            request=request,
-            view=self
-        )
+        res = self.OutputSerializer(data=users)
+
+        return Response(data=res, status=status.HTTP_201_CREATED)

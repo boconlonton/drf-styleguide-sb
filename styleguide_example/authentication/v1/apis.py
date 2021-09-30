@@ -18,6 +18,11 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         - password (str): specify user password for validating
     """
 
+    class InputToken(Serializer):
+
+        email = CharField(min_length=5, max_length=12, required=False)
+        password = CharField()
+
     class OutputToken(Serializer):
         """Docstring for response output"""
 
@@ -30,9 +35,10 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         def update(self, instance, validated_data):
             raise NotImplementedError()
 
-    @swagger_auto_schema(responses={
-        HTTP_200_OK: openapi.Response('Token', OutputToken)
-    })
+    @swagger_auto_schema(
+        operation_id='Get token API',
+        request_body=InputToken,
+        responses={HTTP_200_OK: openapi.Response('Token', OutputToken)})
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
 
