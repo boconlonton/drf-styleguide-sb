@@ -31,13 +31,15 @@ class CustomTokenObtainPairView(TokenObtainPairView):
             raise NotImplementedError()
 
     @swagger_auto_schema(responses={
-        HTTP_200_OK: openapi.Response('Token Response', OutputToken)
+        HTTP_200_OK: openapi.Response('Token', OutputToken)
     })
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
 
 
 class CustomTokenRefreshView(TokenRefreshView):
+    """This API is used for refreshing token"""
+
     class OutputRefreshToken(Serializer):
         access = CharField()
 
@@ -47,8 +49,9 @@ class CustomTokenRefreshView(TokenRefreshView):
         def update(self, instance, validated_data):
             raise NotImplementedError()
 
-    @swagger_auto_schema(responses={
-        HTTP_200_OK: openapi.Response('Refresh Response', OutputRefreshToken)
-    })
+    @swagger_auto_schema(
+        responses={
+            HTTP_200_OK: openapi.Response('Refresh Token', OutputRefreshToken)
+        })
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
