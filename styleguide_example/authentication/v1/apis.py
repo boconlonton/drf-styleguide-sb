@@ -8,8 +8,10 @@ from rest_framework_simplejwt.views import TokenRefreshView
 
 from drf_yasg.utils import swagger_auto_schema
 
+from drf_yasg import openapi
 
-class TokenObtainPairView(TokenObtainPairView):
+
+class CustomTokenObtainPairView(TokenObtainPairView):
     """This API is used for retrieving access token for a validated user
     Params:
         - email (str): specify user email for validating
@@ -28,12 +30,14 @@ class TokenObtainPairView(TokenObtainPairView):
         def update(self, instance, validated_data):
             raise NotImplementedError()
 
-    @swagger_auto_schema(responses={HTTP_200_OK: OutputToken})
+    @swagger_auto_schema(responses={
+        HTTP_200_OK: openapi.Response('Token Response', OutputToken)
+    })
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
 
 
-class TokenRefreshView(TokenRefreshView):
+class CustomTokenRefreshView(TokenRefreshView):
     class OutputRefreshToken(Serializer):
         access = CharField()
 
@@ -43,6 +47,8 @@ class TokenRefreshView(TokenRefreshView):
         def update(self, instance, validated_data):
             raise NotImplementedError()
 
-    @swagger_auto_schema(responses={HTTP_200_OK: OutputRefreshToken})
+    @swagger_auto_schema(responses={
+        HTTP_200_OK: openapi.Response('Refresh Response', OutputRefreshToken)
+    })
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
