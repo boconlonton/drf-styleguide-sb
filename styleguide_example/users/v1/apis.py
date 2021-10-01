@@ -1,5 +1,3 @@
-from django.core.exceptions import ValidationError
-
 from rest_framework import serializers
 from rest_framework import status
 
@@ -11,9 +9,9 @@ from drf_yasg.utils import swagger_auto_schema
 
 from drf_yasg import openapi
 
-from styleguide_example.api.mixins import ApiErrorsMixin
-from styleguide_example.api.pagination import get_paginated_response
-from styleguide_example.api.pagination import DefaultLimitOffsetPagination
+from styleguide_example.api.common.mixins import ApiErrorsMixin
+from styleguide_example.api.common.pagination import get_paginated_response
+from styleguide_example.api.common.pagination import DefaultLimitOffsetPagination
 
 from styleguide_example.users.v1.selectors import user_list
 

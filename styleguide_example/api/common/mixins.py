@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from rest_framework import exceptions as rest_exceptions
 from rest_framework.permissions import IsAuthenticated
 
-from styleguide_example.api.errors import get_error_message
+from styleguide_example.api.common.errors import get_error_message
 
 
 class ApiAuthMixin:

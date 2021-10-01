@@ -4,7 +4,7 @@ from django.contrib.auth.models import BaseUserManager as BUM
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.models import AbstractBaseUser
 
-from styleguide_example.common.models import BaseModel
+from styleguide_example.api.common.models import BaseModel
 
 
 # Taken from here:

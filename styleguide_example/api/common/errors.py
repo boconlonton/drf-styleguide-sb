@@ -2,7 +2,7 @@ from rest_framework.views import exception_handler
 from rest_framework.settings import api_settings
 from rest_framework import exceptions
 
-from styleguide_example.common.utils import get_first_matching_attr
+from styleguide_example.api.common.utils import get_first_matching_attr
 
 
 def get_error_message(exc):

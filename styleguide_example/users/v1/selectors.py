@@ -1,4 +1,4 @@
-from styleguide_example.common.types import QuerySetType
+from styleguide_example.api.common.types import QuerySetType
 
 from styleguide_example.users.models import BaseUser
 from styleguide_example.users.v1.filters import BaseUserFilter
