@@ -190,8 +190,8 @@ REST_FRAMEWORK = {
 
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
-        'Token': {
-            'type': 'JWT',
+        'Bearer': {
+            'type': 'apiKey',
             'name': 'Authorization',
             'in': 'header'
         }

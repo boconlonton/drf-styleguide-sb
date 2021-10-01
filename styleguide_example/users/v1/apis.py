@@ -1,3 +1,5 @@
+from django.core.exceptions import ValidationError
+
 from rest_framework import serializers
 from rest_framework import status
 
@@ -102,7 +104,6 @@ class UserCreateApi(ApiErrorsMixin, APIView):
                 OutputSerializer)
         })
     def post(self, request):
-        # Make sure the filters are valid, if passed
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
