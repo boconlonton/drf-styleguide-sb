@@ -20,3 +20,11 @@ def user_list(*, filters=None) -> QuerySetType[BaseUser]:
     qs = BaseUser.objects.all()
 
     return BaseUserFilter(filters, qs).qs
+
+
+def user_get_details(*, user_id: int):
+    user = BaseUser.objects.get(pk=user_id)
+    return {
+        'id': user.id,
+        'email': user.email
+    }

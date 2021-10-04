@@ -14,6 +14,7 @@ from styleguide_example.api.common.pagination import get_paginated_response
 from styleguide_example.api.common.pagination import DefaultLimitOffsetPagination
 
 from styleguide_example.users.v1.selectors import user_list
+from styleguide_example.users.v1.selectors import user_get_details
 
 from styleguide_example.users.v1.services import user_create
 
@@ -72,6 +73,34 @@ class UserListApi(ApiErrorsMixin, APIView):
         )
 
 
+class UserDetailApi(ApiErrorsMixin, APIView):
+    """Get details of a user API"""
+
+    class OutputSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = BaseUser
+            fields = (
+                'id',
+                'email',
+            )
+            ref_name = 'UserDetail'
+
+    @swagger_auto_schema(
+        operation_id='User details API',
+        responses={
+            status.HTTP_201_CREATED: openapi.Response(
+                'Get user successfully',
+                OutputSerializer),
+        })
+    def get(self, request, user_id):
+
+        user = user_get_details(user_id=user_id)
+
+        serializer = self.OutputSerializer(user)
+
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
 class UserCreateApi(ApiErrorsMixin, APIView):
     """Create user API"""
 
@@ -99,9 +128,16 @@ class UserCreateApi(ApiErrorsMixin, APIView):
         responses={
             status.HTTP_201_CREATED: openapi.Response(
                 'Create user successfully',
-                OutputSerializer)
+                OutputSerializer),
         })
     def post(self, request):
+        return Response(data={"errors": [
+            {
+                'message': 'This is a non-field error',
+                'code': 'custom',
+                'fields': None
+            }
+        ]}, status=status.HTTP_400_BAD_REQUEST)
         serializer = self.InputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
